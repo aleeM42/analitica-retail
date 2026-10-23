@@ -1,0 +1,7 @@
+*.csv
+.ignore
+env
+__pycache__
+*.egg-info
+data/out/*
+build
