@@ -23,6 +23,8 @@ import pandas as pd
 
 from retailventure_dss.etl.models.type import RetailVentureTables
 
+from retailventure_dss.etl.quality_report import build_quality_report, outlier_profile
+
 
 _CSV_DIR: Final[str] = getenv("CSV_DIR", "./data/in")
 
@@ -37,37 +39,22 @@ MAPPED_CLASS_TO_FILES: Final = [
 ]
 
 
-def num_outliers(df: pd.DataFrame) -> int:
-    outliers_detected = 0
-
-    cols_num = df.select_dtypes(include=["number"]).columns.tolist()
-    cols_num = [c for c in cols_num if df[c].dtype != bool]
-
-    for col in cols_num:
-        Q1 = df[col].quantile(0.25)
-        Q3 = df[col].quantile(0.75)
-        IQR = Q3 - Q1
-
-        if IQR == 0:
-            continue
-
-        lower = Q1 - 1.5 * IQR
-        upper = Q3 + 1.5 * IQR
-
-        outliers_detected += int(((df[col] < lower) | (df[col] > upper)).sum())
-
-    return outliers_detected
 
 
-outliers = {}
+perfiles = {}
+
 
 
 def extract(filepath: str) -> list[dict[Any, Any]]:
     raw_data: pd.DataFrame = pd.read_csv(filepath_or_buffer=filepath)
     for entry in MAPPED_CLASS_TO_FILES:
         if filepath == entry[0]:
-            outliers[str(entry[1])] = num_outliers(raw_data)
-
+            filas_out, _ = outlier_profile(raw_data)
+            perfiles[str(entry[1])] = {
+                "celdas": int(raw_data.size),
+                "nulos": int(raw_data.isna().sum().sum()),
+                "filas_outlier": filas_out,
+            }
     return raw_data.to_dict(orient="records")
 
 
@@ -448,7 +435,7 @@ def etl():
         conn.execute("SELECT COUNT(*) FROM clean_transacciones").fetchone()[0],
     )
 
-    modelos_a_auditar = [
+    modelos = [
         (Cliente, "clientes", "clean_clientes"),
         (Productos, "productos", "clean_productos"),
         (Transacciones, "transacciones", "clean_transacciones"),
@@ -456,69 +443,22 @@ def etl():
         (Interaccion, "interacciones_crm", "clean_interacciones_crm"),
         (Devolucion, "devoluciones", "clean_devoluciones"),
     ]
-
-    audits = []
-    todos_los_errores = []
-
-    for modelo, nombre_ds, tabla_clean in modelos_a_auditar:
-        data = cast(TransformResult, results.get(str(modelo)))
-        total = len(data.approved_entries) + len(data.rejected_entries)
-
-        if total == 0:
-            continue
-
-        num_columns = len(modelo.model_fields)
-        aprobados_pydantic = len(data.approved_entries)
-        aprobados_bd = conn.execute(f"SELECT COUNT(*) FROM {tabla_clean}").fetchone()[0]
-        descartados_fk = aprobados_pydantic - aprobados_bd
-
-        if descartados_fk > 0:
-            todos_los_errores.append(
-                {
-                    "dataset": nombre_ds,
-                    "motivo": f"Inconsistencia referencial (FK): {descartados_fk} filas huérfanas",
-                    "datos_crudos": "N/A",
-                }
-            )
-
-        completitud = ((total * num_columns - data.nulls) / (total * num_columns)) * 100
-        unicidad = ((total - data.dups) / total) * 100
-        consistencia = (aprobados_bd / total) * 100
-        oportunidad = (aprobados_pydantic / total) * 100
-
-        audit = {
-            "dataset": nombre_ds,
-            "total_filas": total,
-            "valores_null": data.nulls,
-            "duplicados": data.dups,
-            "outliers_detectados": outliers.get(str(modelo), 0),
-            "completitud_%": round(completitud, 2),
-            "consistencia_%": round(consistencia, 2),
-            "unicidad_%": round(unicidad, 2),
-            "oportunidad_%": round(oportunidad, 2),
-        }
-        audits.append(audit)
-
-    df_auditoria = pd.DataFrame(audits)
-    df_auditoria.to_csv(f"{_CSV_DIR}/reporte_calidad.csv", index=False)
-    print("\nReporte de Calidad generado: reporte_calidad.csv")
+    datasets = []
+    for modelo, nombre, tabla_clean in modelos:
+        r = cast(TransformResult, results[str(modelo)])
+        datasets.append({
+            "nombre": nombre,
+            "total": len(r.approved_entries) + len(r.rejected_entries),
+            "rechazados_pydantic": len(r.rejected_entries),
+            "dups": r.dups,
+            "perfil": perfiles[str(modelo)],
+            "filas_clean": conn.execute(f"SELECT COUNT(*) FROM {tabla_clean}").fetchone()[0],
+            "rechazados": r.rejected_entries,
+        })
+    df_auditoria, df_errores = build_quality_report(conn, datasets)
+    df_auditoria.to_csv("./data/out/reporte_calidad.csv", index=False)
+    df_errores.to_csv("./data/out/errores_inconsistentes.csv", index=False)
     print(df_auditoria.to_string(index=False))
-
-    for modelo, nombre_ds, _ in modelos_a_auditar:
-        data = cast(TransformResult, results.get(str(modelo)))
-        for error in data.rejected_entries:
-            todos_los_errores.append(
-                {
-                    "dataset": nombre_ds,
-                    "motivo": error.get("motivo_error", "Desconocido"),
-                    "datos_crudos": str(error),
-                }
-            )
-
-    if todos_los_errores:
-        df_errores = pd.DataFrame(todos_los_errores)
-        df_errores.to_csv(f"{_CSV_DIR}/errores_inconsistentes.csv", index=False)
-        print("\nRegistro de errores generado: errores_inconsistentes.csv")
 
     print("Cargando capa dimensional...")
     populate_dimensional_tables()
