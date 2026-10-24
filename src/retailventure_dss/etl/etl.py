@@ -180,7 +180,7 @@ def etl():
         )
         for c in data
     ]
-    print(bulk)
+
     print(f"Inserting in dirty {data[0].__class__}")
     conn.executemany(
         """
@@ -354,7 +354,7 @@ def etl():
                 (cliente_id, edad, genero, ciudad, segmento, fecha_registro, canal_adquisicion)
             SELECT cliente_id, edad, genero, ciudad, segmento, fecha_registro, canal_adquisicion
             FROM stg_clientes
-            WHERE genero IN ('M', 'F')
+            WHERE genero IN ('M', 'F', 'ND')
             AND edad >= 0
             AND fecha_registro IS NOT NULL
         """
@@ -418,7 +418,7 @@ def etl():
             WHERE s.cantidad > 0
             AND s.precio_unitario >= 0.00
             AND s.descuento >= 0.000
-            AND s.descuento <= 0.000
+            AND s.descuento <= 1.000
             AND s.monto_neto >= 0.00
         """
     )
@@ -676,4 +676,4 @@ def populate_dimensional_tables():
     """)
 
 
-etl()
+if __name__ == "__main__": etl()
