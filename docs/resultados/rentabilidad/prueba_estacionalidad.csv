@@ -1,0 +1,4 @@
+prueba,chi2,p_valor,conclusion
+transacciones por mes vs dias del mes,11.13993142954162,0.43161586898336013,no se detecta
+mes x categoria (independencia),73.33921107832643,0.049775102388043044,evidencia marginal; ningún mes lo confirma tras FDR
+mes x canal (independencia),18.465395976853028,0.6780660790348894,no se detecta

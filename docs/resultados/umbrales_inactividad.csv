@@ -1,0 +1,6 @@
+segmento,dias_vigilancia,dias_riesgo,mediana_intervalo,curva_propia
+Esporádico,388.0,576.0,215.0,True
+Frecuente,97.0,161.0,48.0,True
+Premium,54.0,91.0,27.0,True
+Nuevo,388.0,576.0,215.0,False
+Inactivo,388.0,576.0,215.0,False
