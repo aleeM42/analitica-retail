@@ -112,7 +112,7 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="El canal digital aporta el 38% de la venta pero sufre una erosión de margen de 3.0 pp",
+            title="El canal digital aporta el 38% de la venta pero sufre una erosión de margen de 4.1 pp",
             subtitle="La logística inversa reduce el margen neto online a solo 9.5% frente al 13.7% en tienda física.",
         )
 
@@ -187,7 +187,7 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="El 92% del margen descansa en Frecuentes y Premium, pero 696 clientes clave están en riesgo",
+            title="El 81% del margen descansa en Frecuentes y Premium, pero 696 clientes clave están en riesgo",
             subtitle="Modelo Kaplan-Meier S(t) < 0.10: inactividad extrema amenaza $39,895 de ingresos semestrales.",
         )
 
@@ -215,24 +215,17 @@ class ChartFactory:
         )
 
         fig.add_vline(
-            x=22.0,
-            line_dash="dot",
-            line_color=COLOR_SUCCESS,
-            annotation_text="Referencia histórica (22.0%)",
-            annotation_position="top right",
-        )
-        fig.add_vline(
-            x=11.0,
+            x=9.04,
             line_dash="dash",
-            line_color=COLOR_DANGER,
-            annotation_text="Promedio actual (11.0%)",
-            annotation_position="bottom right",
+            line_color=COLOR_WARNING,
+            annotation_text="Promedio global actual (9.04%)",
+            annotation_position="top right",
         )
 
         return apply_theme(
             fig,
-            title="La conversión de marketing colapsó un 50% en 18 meses por sobreexposición y fatiga",
-            subtitle="El rendimiento cayó del 22% al 11% medio por envíos indiscriminados de campañas genéricas.",
+            title="La conversión de marketing cayó a la mitad (11.7% a 5.1%): la fatiga en Email masivo impulsa el declive",
+            subtitle="El rendimiento promedio es de 9.0%, evidenciando saturación y falta de segmentación en canales masivos.",
         )
 
     # ── V6: Curva Logística del Efecto Descuento ──────────────────────────────
@@ -276,8 +269,8 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="Descuentos superiores al 10% en campañas no incrementan la conversión y reducen el ROI un 35%",
-            subtitle="Regresión Logística multivariada (HC1): la probabilidad de compra se estabiliza rápidamente.",
+            title="El descuento en campañas incrementa la conversión pero destruye el retorno si no se segmenta quirúrgicamente",
+            subtitle="Regresión Logística multivariada (beta=+3.28, p<0.001): la propensión aumenta pero el subsidio erosiona el margen neto.",
         )
 
     # ── V7: Heatmap Rendimiento Cruzado Tipo x Segmento ───────────────────────
@@ -309,7 +302,7 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="Push en App para clientes Premium logra 28% de conversión vs 4% de Email a Inactivos",
+            title="Push en App para clientes Premium lidera la conversión (15.3%) vs 4.7% de Email a Inactivos",
             subtitle="El retorno depende críticamente de la segmentación quirúrgica de canales y audiencias receptivas.",
         )
 
@@ -328,7 +321,7 @@ class ChartFactory:
 
         labels = ["Sin Quejas CRM", "Con Quejas CRM", "Sin Devolución", "Con Devolución"]
         tasas = [conv_sin_quejas, conv_con_quejas, conv_sin_dev, conv_con_dev]
-        colors = [COLOR_SUCCESS, COLOR_DANGER, COLOR_SUCCESS, COLOR_WARNING]
+        colors = [COLOR_SUCCESS, COLOR_ACCENT, COLOR_SUCCESS, COLOR_WARNING]
 
         fig.add_trace(
             go.Bar(
@@ -342,8 +335,8 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="Clientes con quejas abiertas y devoluciones previas presentan un 75% menos de respuesta",
-            subtitle="Marketing falla porque la fricción post-venta previa bloquea psicológicamente el re-engagement.",
+            title="Los no-convertidores no difieren por quejas ni devoluciones (p>0.80), sino por tasa de apertura",
+            subtitle="La tasa de conversión es idéntica con o sin quejas (~15.5%); el rechazo se debe a falta de apertura (open rate 0% vs 67%).",
         )
 
     # ── V9: Comparación de ROI Bruto vs ROI Neto de Margen ────────────────────
@@ -381,8 +374,8 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="El ROI de marketing se desploma de 4.2x a 1.1x cuando se evalúa sobre margen neto real",
-            subtitle="La medición sobre venta bruta es una falacia contable que infla artificialmente el rendimiento publicitario.",
+            title="El ROI de marketing colapsa de 6.8x bruto a 0.59x sobre margen neto real: medir sobre ventas infla el retorno 11 veces",
+            subtitle="La medición sobre venta bruta es una falacia contable que ignora costos de producto y subsidios promocionales.",
         )
 
     # ── V10: Cascada de Rescate Financiero (Waterfall) ─────────────────────────
@@ -396,7 +389,7 @@ class ChartFactory:
             "+ Retención Predictiva",
             "Margen Post-Plan",
         ]
-        y_values = [2155.16, 95.82, 145.16, 19.95, 0]
+        y_values = [2155.16, 47.91, 145.16, 4.91, 0]
 
         fig.add_trace(
             go.Waterfall(
@@ -416,6 +409,6 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="Intervención estratégica de tres palancas proyecta una recuperación de $521k anuales",
-            subtitle="Recuperación directa equivalente a un +12.1% de incremento en el margen bruto sin aumentar ventas.",
+            title="Intervención estratégica de tres palancas proyecta una recuperación de $396k anuales en margen",
+            subtitle="Recuperación semestral de +$198k equivalente a un +9.2% de incremento en el margen bruto sin aumentar ventas.",
         )

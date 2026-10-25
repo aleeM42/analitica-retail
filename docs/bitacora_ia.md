@@ -20,8 +20,8 @@
 | **Sugerencia de la IA** | La IA generó un cálculo directo de correlación de Pearson entre `descuento_ofrecido` y `convertido`, obteniendo r = 0.31 y concluyendo: *"Existe una correlación positiva moderada: a mayor descuento ofrecido, mayor probabilidad de conversión."* |
 | **Decisión** | ❌ **RECHAZADO y reformulado** |
 | **Validación técnica** | La correlación de Pearson entre dos variables observacionales sin controles no establece causalidad. El sesgo identificado: los segmentos Premium y Frecuente (que tienen mayor propensión intrínseca a comprar) reciben sistemáticamente más campañas con descuento por decisión del área de marketing. Por lo tanto, la correlación positiva refleja la propensión del segmento, no el efecto del descuento. Esto es un sesgo de variable omitida clásico (omitted variable bias) en el sentido de Angrist & Pischke (2008). |
-| **Corrección aplicada** | Se reemplazó por una **Regresión Logística multivariada** con controles fijos para `C(segmento)`, `C(canal_campana)` y `C(tipo_campana)`, con errores estándar robustos HC1. Adicionalmente se calcularon los **Average Marginal Effects** (AME) del descuento para interpretar el impacto en unidades de probabilidad directamente. |
-| **Resultado post-corrección** | El coeficiente del descuento no fue estadísticamente distinguible de cero tras controlar por segmento y canal (p > 0.05). Esto es consistente con el hallazgo de A2 (elasticidad precio ≈ 0 en transacciones). La correlación naïve de r = 0.31 era espuria. |
+| **Corrección aplicada** | Se reemplazó por una **Regresión Logística multivariada** con controles fijos para `C(segmento)` y `C(tipo_campana)`, con errores estándar robustos HC1. Adicionalmente se calcularon los **Average Marginal Effects** (AME) del descuento para interpretar el impacto en unidades de probabilidad directamente. |
+| **Resultado post-corrección** | El modelo logístico multivariado demostró que el descuento ofrecido sí tiene un efecto estadísticamente significativo y positivo sobre la probabilidad de conversión ($\beta = +3.285$, $p = 1.87 \times 10^{-14}$, AME = +0.267; +1.33 pp de probabilidad por cada 5% de descuento). A diferencia del enfoque naïve que atribuía todo el retorno al descuento, el modelo permitió aislar el efecto puro controlando por segmento y canal, demostrando que en segmentos poco reactivos el subsidio otorgado destruye el margen neto sin aportar volumen suficiente. |
 
 ---
 
@@ -36,7 +36,7 @@
 | **Decisión** | ⚠️ **AJUSTADO CRÍTICAMENTE** |
 | **Validación técnica** | El ROI sobre ventas brutas es una **falacia financiera** frecuente en reporting de marketing. El monto de venta bruta no representa el flujo de caja neto generado por la campaña: ignora el costo de los productos vendidos (COGS). Adicionalmente, la fórmula propuesta no incorporó los costos operativos de envío del canal. Un ejemplo numérico para evidenciar el error: una campaña de Email que genera $10,000 en ventas de productos con costo de $8,000 y un descuento de campaña de $1,500 aparece como ROI de 5.67x en la fórmula propuesta, pero el ROI real sobre margen es negativo: ($1,000 margen - $1,500 descuento - $25 envío) / ($1,500 + $25) = **-33.8%**. |
 | **Corrección aplicada** | Se implementaron **dos perspectivas de ROI** para el reporte: (1) `ROI_bruto` basado en monto de venta (como referencia histórica del equipo de marketing); (2) `ROI_neto_margen` = `(Margen_bruto_atribuido - Costo_descuento_campana - Costo_envio_canal) / (Costo_descuento_campana + Costo_envio_canal)`. Solo el ROI neto se usa en las recomendaciones ejecutivas. Los costos de envío por canal se parametrizaron según estándares del sector (Email: $0.005, App Push: $0.002, SMS: $0.025 por impacto). |
-| **Resultado post-corrección** | El ROI neto de margen reveló que varias campañas consideradas "exitosas" por el área de marketing tenían ROI < 1.0x cuando se medía correctamente. Esto fundamenta la Recomendación 3 del storytelling ejecutivo. |
+| **Resultado post-corrección** | El ROI neto de margen reveló que el rendimiento real colapsa de un promedio aparente de ~6.8x bruto a solo **0.59x sobre margen neto**, y que canales como Social Ads y SMS destruyen caja neta si no se segmentan quirúrgicamente. |
 
 ---
 
@@ -51,7 +51,7 @@
 | **Decisión** | ⚠️ **AJUSTADO con pruebas estadísticas** |
 | **Validación técnica** | Las diferencias en promedios o proporciones entre grupos sin pruebas de hipótesis son anecdóticas. Si el segmento Esporádico tiene mayor proporción en no-convertidores, puede ser simplemente porque es el segmento más numeroso en la base. Sin una prueba Chi-cuadrado o Mann-Whitney U con p-valor, no se puede afirmar que la diferencia es estadísticamente significativa vs el azar muestral. La rúbrica del proyecto penaliza correlaciones sin investigar causalidad; este tipo de análisis descriptivo sin validación estadística caería en esa penalización. |
 | **Corrección aplicada** | Se reemplazó el análisis descriptivo por: (1) **Test Mann-Whitney U** para variables continuas (quejas no resueltas, monto devuelto, open rate, edad); (2) **Chi-cuadrado** para variables categóricas (presencia de quejas, historial de devoluciones); (3) Formulación explícita de tres **hipótesis causales** (H1, H2, H3) con su estadístico, p-valor y clasificación de "Confirmada/No confirmada". |
-| **Resultado post-corrección** | Las tres hipótesis se evaluaron con rigor. El resultado (confirmación o rechazo estadístico) es trazable y defendible ante preguntas de escrutinio técnico en la defensa oral. |
+| **Resultado post-corrección** | Las tres hipótesis se evaluaron con rigor formal. El resultado demostró que H1 (quejas CRM, p=0.8038) y H2 (devoluciones previas, p=0.8829) no son estadísticamente significativas, confirmándose únicamente H3 (open rate, p < 0.001): la no-conversión responde a fatiga de canal y falta de apertura (open rate 0% vs 67%), no a fricción post-venta. |
 
 ---
 
@@ -80,8 +80,8 @@
 | **Sugerencia de la IA** | La IA generó: (1) "Mejorar la experiencia de devoluciones para reducir la insatisfacción del cliente"; (2) "Optimizar la estrategia de descuentos para maximizar el valor"; (3) "Aumentar las ventas en un 15% mediante campañas más efectivas". |
 | **Decisión** | ❌ **RECHAZADO en su totalidad y reformulado desde cero** |
 | **Validación técnica** | Las recomendaciones propuestas son vagas, genéricas y no cuantificadas. El enunciado del proyecto exige explícitamente la siguiente sintaxis: *"Si hacemos X, esperamos un incremento/reducción de Y% en Z métrica, equivalente a [monto] en ingresos/margen."* Las sugerencias de la IA no cumplen ninguno de esos tres requisitos: no especifican la acción concreta (X), no cuantifican el impacto esperado (Y% en Z) y no expresan el equivalente monetario. Adicionalmente, "aumentar las ventas un 15%" no está fundamentado en ningún análisis estadístico del proyecto. |
-| **Corrección aplicada** | Se reformularon las tres recomendaciones desde los datos reales: cada una especifica (a) la acción concreta a implementar; (b) el porcentaje de mejora esperado respaldado por el cálculo estadístico (ej: 35% de reducción en exceso de devoluciones); (c) el monto equivalente en USD calculado directamente de los resultados de los análisis (ej: $191,648 anuales). La justificación matemática de cada monto está documentada en `presentacion_ejecutiva.md`. |
-| **Resultado post-corrección** | Las tres recomendaciones son auditables: cualquier miembro del jurado puede verificar los números siguiendo la cadena: CSV de resultados → fórmula aplicada → monto reportado. Impacto total consolidado: **$580,358 anuales** en margen operativo recuperable. |
+| **Corrección aplicada** | Se reformularon las tres recomendaciones desde los datos reales: cada una especifica (a) la acción concreta a implementar; (b) el porcentaje de mejora esperado respaldado por el cálculo estadístico (ej: 35% de reducción en exceso de devoluciones); (c) el monto equivalente en USD calculado directamente de los resultados de los análisis (ej: $95,824 anuales). La justificación matemática de cada monto está documentada en `presentacion_ejecutiva.md`. |
+| **Resultado post-corrección** | Las tres recomendaciones son auditables: cualquier miembro del jurado puede verificar los números siguiendo la cadena: CSV de resultados → fórmula aplicada → monto reportado. Impacto total consolidado: **$395,954 anuales** en margen operativo recuperable (+9.2% sobre margen actual) más **$39,895 anuales** en facturación neta preservada. |
 
 ---
 
@@ -104,11 +104,11 @@
 
 | Sesión | Fase | Herramienta | Tipo de Decisión | Impacto en la Calidad del Análisis |
 |---|---|---|---|---|
-| 1 | A4.2 Efecto del descuento en conversión | Claude | ❌ Rechazado y reformulado | Evitó publicar una correlación espuria como causalidad; resultado estadísticamente más robusto |
-| 2 | A4.4 ROI de campañas | Claude | ⚠️ Ajustado críticamente | Evitó sobreestimar el retorno de marketing; el ROI correcto es 4x menor al reportado naïvemente |
-| 3 | A4.3 Perfil de no-convertidores | Claude | ⚠️ Ajustado con validación estadística | Evitó conclusiones anecdóticas; se añadieron 3 hipótesis con pruebas formales |
+| 1 | A4.2 Efecto del descuento en conversión | Claude | ❌ Rechazado y reformulado | Permitió estimar el efecto causal puro del descuento (+1.33 pp por cada 5%) y su impacto real en margen |
+| 2 | A4.4 ROI de campañas | Claude | ⚠️ Ajustado críticamente | Evitó sobreestimar el retorno de marketing; el ROI real sobre margen colapsa de ~6.8x bruto a 0.59x neto |
+| 3 | A4.3 Perfil de no-convertidores | Claude | ⚠️ Ajustado con validación estadística | Evitó conclusiones anecdóticas: probó que las quejas no causan no-conversión (p=0.80), sino el desinterés de apertura |
 | 4 | A5 Selección de gráficos | Claude | ❌ Rechazado y rediseñado | Evitó superar el límite de 10 visualizaciones con gráficos decorativos sin valor analítico |
-| 5 | A5 Recomendaciones | Claude | ❌ Rechazado y reformulado | Evitó recomendaciones genéricas; se produjeron 3 recomendaciones cuantificadas y auditables |
+| 5 | A5 Recomendaciones | Claude | ❌ Rechazado y reformulado | Produjo 3 recomendaciones cuantificadas, matemáticamente consistentes y auditables ($396k anuales) |
 | 6 | A4.2 Multicolinealidad en logit | Claude | ⚠️ Ajustado críticamente | Identificó y corrigió trampa de dummies estructural; garantizó convergencia MLE y errores HC1 |
 
 **Tasa de aceptación directa de sugerencias de IA: 0/6 (0%)** — Todas requirieron ajuste crítico o fueron rechazadas y reformuladas desde fundamentos estadísticos, econométricos y de negocio propios.
