@@ -1,0 +1,4 @@
+hipotesis,variable_test,estadistico,valor_estadistico,p_valor,confirmada_005,mediana_convertidores,mediana_no_convertidores,interpretacion
+H1: No-convertidores tienen más quejas no resueltas que bloquean el re-engagement,quejas_no_resueltas,Mann-Whitney U,1504569.0,0.8037905484490445,False,0.0,0.0,No confirmada estadísticamente
+H2: No-convertidores tuvieron más devoluciones previas (mala experiencia de producto),tuvo_devolucion,Chi-cuadrado,0.021704498509901388,0.8828759214922653,False,44.579945799457995,44.953225012309204,No confirmada estadísticamente
+H3: No-convertidores tienen menor open_rate (desalineación canal-segmento),open_rate_cliente,Mann-Whitney U,2391927.0,3.782221866434105e-167,True,0.6666666666666666,0.0,Confirmada: los no-convertidores abren menos los mensajes antes de decidir

@@ -84,25 +84,25 @@
 
 #### Evaluación de la Efectividad del Marketing
 
-- [ ] El sistema debe identificar las combinaciones de campañas de marketing que generan el mayor retorno mediante el calculo de:
-  - [ ] tasa de conversion por tipo de campaña
-  - [ ] canal de envio
-  - [ ] segmento de cliente
-- [ ] El sistema debe determinar si existe un efecto del descuento ofrecido en la campaña sobre la conversión, controlando por segmento.
-- [ ] El sistema debe identificar el segmento de clientes que recibe campañas pero no convierte
-- [ ] El sistema debe proponer hipótesis sobre las causas de clientes que reciben campañas pero no convierten basadas en los datos de CRM y devoluciones.
+- [x] El sistema debe identificar las combinaciones de campañas de marketing que generan el mayor retorno mediante el calculo de:
+  - [x] tasa de conversion por tipo de campaña
+  - [x] canal de envio
+  - [x] segmento de cliente
+- [x] El sistema debe determinar si existe un efecto del descuento ofrecido en la campaña sobre la conversión, controlando por segmento.
+- [x] El sistema debe identificar el segmento de clientes que recibe campañas pero no convierte
+- [x] El sistema debe proponer hipótesis sobre las causas de clientes que reciben campañas pero no convierten basadas en los datos de CRM y devoluciones.
 
-- [ ] El sistema debe calcular el ROI estimado de cada tipo de campaña usando el monto de compra convertida versus el costo implícito del descuento ofrecido.
+- [x] El sistema debe calcular el ROI estimado de cada tipo de campaña usando el monto de compra convertida versus el costo implícito del descuento ofrecido.
 
 #### Storytelling Ejecutivo y Recomendaciones
 
-- [ ] El sistema debe mostrar un relato de datos cohesionado que conecte los hallazgos de las actividades anteriores en una narrativa con:
-  - [ ] Inicio (situación actual)
-  - [ ] Nudo (hallazgos clave y patrones detectados)
-  - [ ] Desenlace (recomendaciones priorizadas).
-- [ ] El sistema debe mostrar un dashboard ejecutiva con **máximo 10 visualizaciones**
-- [ ] El sistema debe cuantificar el impacto potencial de al menos tres recomendaciones
-- [ ] Cada visualización debe tener un título en forma de insight, no de descripción (ej: _"El canal digital genera el 40% del ingreso pero solo el 12% del margen neto"_).
-- [ ] Las recomoendacionas se deben expresar cada una como _"Si hacemos X, esperamos un incremento/reducción de Y% en Z métrica, equivalente a \[monto] en ingresos"_.
+- [x] El sistema debe mostrar un relato de datos cohesionado que conecte los hallazgos de las actividades anteriores en una narrativa con:
+  - [x] Inicio (situación actual)
+  - [x] Nudo (hallazgos clave y patrones detectados)
+  - [x] Desenlace (recomendaciones priorizadas).
+- [x] El sistema debe mostrar un dashboard ejecutiva con **máximo 10 visualizaciones**
+- [x] El sistema debe cuantificar el impacto potencial de al menos tres recomendaciones
+- [x] Cada visualización debe tener un título en forma de insight, no de descripción (ej: _"El canal digital genera el 40% del ingreso pero solo el 12% del margen neto"_).
+- [x] Las recomoendacionas se deben expresar cada una como _"Si hacemos X, esperamos un incremento/reducción de Y% en Z métrica, equivalente a \[monto] en ingresos"_.
 
 ## [Enunciado](./proyecto.md)

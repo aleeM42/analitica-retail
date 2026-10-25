@@ -73,9 +73,50 @@ def cargar_crm() -> pd.DataFrame:
     return df
 
 
+def cargar_campanas() -> pd.DataFrame:
+    """Campañas de marketing enriquecidas con el perfil demográfico del cliente.
+
+    Columnas clave:
+      - abierto / convertido: booleans (ya limpios en la tabla clean_).
+      - descuento_ofrecido: fracción (0.00–1.00) del precio de lista.
+      - segmento, genero, edad, ciudad, canal_adquisicion: del cliente receptor.
+    """
+    conn = SingletonDbConnection.get_connection()
+    df = conn.execute(
+        """
+        SELECT
+            m.campana_id,
+            m.cliente_id,
+            m.tipo_campana,
+            m.fecha_envio::DATE           AS fecha_envio,
+            m.canal_campana,
+            m.abierto,
+            m.convertido,
+            m.descuento_ofrecido::DOUBLE  AS descuento_ofrecido,
+            c.segmento,
+            c.ciudad,
+            c.genero,
+            c.edad,
+            c.canal_adquisicion,
+            c.fecha_registro::DATE        AS fecha_registro
+        FROM clean_campanas_marketing m
+        JOIN clean_clientes c USING (cliente_id)
+        """
+    ).fetchdf()
+    df["fecha_envio"] = pd.to_datetime(df["fecha_envio"])
+    df["fecha_registro"] = pd.to_datetime(df["fecha_registro"])
+    return df
+
+
 def guardar(df: pd.DataFrame, modulo: str, nombre: str) -> Path:
     carpeta = RESULTS_DIR / modulo
     carpeta.mkdir(parents=True, exist_ok=True)
     ruta = carpeta / f"{nombre}.csv"
     df.to_csv(ruta, index=False)
+
+    docs_carpeta = Path("./docs/resultados") / modulo
+    docs_carpeta.mkdir(parents=True, exist_ok=True)
+    df.to_csv(docs_carpeta / f"{nombre}.csv", index=False)
+
     return ruta
+
