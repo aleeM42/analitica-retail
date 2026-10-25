@@ -15,9 +15,9 @@ erDiagram
     }
 ```
 
-| cliente_id | edad | genero | ciudad | segmento | fecha_registro | canal_adquisicion |
-| --- | --- | --- | --- | --- | --- | --- |
-| pk |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-| VARCHAR | INTEGER | VARCHAR | VARCHAR | VARCHAR | DATE | VARCHAR |
-|  |  | CHECK (genero IN ('M', 'F')) |  |  |  |  |
+| cliente_id | edad    | genero                             | ciudad  | segmento | fecha_registro | canal_adquisicion |
+| ---------- | ------- | ---------------------------------- | ------- | -------- | -------------- | ----------------- |
+| pk         |         |                                    |         |          |                |                   |
+|            |         |                                    |         |          |                |                   |
+| VARCHAR    | INTEGER | VARCHAR                            | VARCHAR | VARCHAR  | DATE           | VARCHAR           |
+|            |         | CHECK (genero IN ('M', 'F', 'ND')) |         |          |                |                   |

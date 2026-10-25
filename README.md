@@ -6,7 +6,7 @@
 
 - cargar csv: pandas
 - bd/data warehouse: duckdb
-- calculo estadistico y analista: PyMC-Marketing puede hacer cosas como: valor de cliente, churn y efectividad de descuentos, analisis jerarquico de anomalias en devoluciones e inferencia causal de atencion al cliente
+- calculo estadistico: statsmodels y scipy (pruebas de hipotesis, regresiones, curvas de supervivencia Kaplan-Meier)
 - visualizacion: plotly dash
 
 ## Estructura de Directorios
@@ -24,7 +24,7 @@
 │       ├── etl/            # Codigo para guardar los datos validados en el data warehouse
 │       │  └── models/      # Clases de validacion de datos CSV
 │       ├── data_access/    # Capa de accesos/consumo de datos (bd)
-│       ├── analytics/      # Capa logica (Procesamiento)
+│       ├── analitycs/      # Capa logica (Procesamiento)
 │       └── interface/      # Capa de presentacion
 └── tests/                  # Pruebas (si da chance)
 ```

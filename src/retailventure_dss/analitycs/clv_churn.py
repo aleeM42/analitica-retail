@@ -10,6 +10,7 @@ import pandas as pd
 from retailventure_dss.analitycs._base import (
     DIAS_VENTANA,
     FIN_VENTANA,
+    INICIO_VENTANA,
     cargar_clientes,
     cargar_ventas,
     guardar,
@@ -108,7 +109,9 @@ class SupervivenciaKM:
         return 1.0 if s0 <= 0 else self(recencia + horizonte) / s0
 
 
-def tabla_clientes(ventas: pd.DataFrame, clientes: pd.DataFrame) -> pd.DataFrame:
+def tabla_clientes(
+    ventas: pd.DataFrame, clientes: pd.DataFrame, fin: pd.Timestamp = FIN_VENTANA
+) -> pd.DataFrame:
     g = ventas.groupby("cliente_id").agg(
         primera_compra=("fecha", "min"),
         ultima_compra=("fecha", "max"),
@@ -117,7 +120,7 @@ def tabla_clientes(ventas: pd.DataFrame, clientes: pd.DataFrame) -> pd.DataFrame
         margen_total=("margen", "sum"),
     )
     g["ticket_medio"] = g["ingreso_total"] / g["frecuencia"]
-    g["recencia_dias"] = (FIN_VENTANA - g["ultima_compra"]).dt.days
+    g["recencia_dias"] = (fin - g["ultima_compra"]).dt.days
     return clientes[["cliente_id", "segmento", "ciudad", "canal_adquisicion"]].merge(
         g, on="cliente_id", how="left"
     )
@@ -142,8 +145,12 @@ def _curvas_por_segmento(ventas: pd.DataFrame, tabla: pd.DataFrame) -> dict[str,
     return curvas
 
 
-def clasificar_churn(ventas: pd.DataFrame, clientes: pd.DataFrame) -> pd.DataFrame:
-    t = tabla_clientes(ventas, clientes)
+def clasificar_churn(
+    ventas: pd.DataFrame, clientes: pd.DataFrame, fin: pd.Timestamp = FIN_VENTANA
+) -> pd.DataFrame:
+    """`fin` permite clasificar a una fecha pasada (backtest); por defecto, el fin de la ventana."""
+    dias_ventana = (fin - INICIO_VENTANA).days + 1
+    t = tabla_clientes(ventas, clientes, fin)
     curvas = _curvas_por_segmento(ventas, t)
     margen_pct = (
         ventas.groupby("segmento")["margen"].sum() / ventas.groupby("segmento")["monto_neto"].sum()
@@ -167,7 +174,7 @@ def clasificar_churn(ventas: pd.DataFrame, clientes: pd.DataFrame) -> pd.DataFra
         default="Activo",
     )
     # Ingreso esperado a 6 meses si el cliente siguiera su ritmo histórico
-    t["ingreso_esperado_6m"] = t["ingreso_total"] / DIAS_VENTANA * HORIZONTE_DIAS
+    t["ingreso_esperado_6m"] = t["ingreso_total"] / dias_ventana * HORIZONTE_DIAS
     # Escenario adverso: el cliente marcado no vuelve. Esperado: ponderado por la
     # probabilidad de no retorno que implica la cadencia observada.
     t["ingreso_esperado_perdido_6m"] = t["ingreso_esperado_6m"] * t["prob_no_retorno_6m"]
@@ -193,7 +200,7 @@ def resumen_churn(t: pd.DataFrame) -> pd.DataFrame:
 
 def segmento_mayor_valor_en_riesgo(t: pd.DataFrame) -> pd.DataFrame:
     """Clientes 'En riesgo' agrupados por segmento y por tramo de valor (quintil de
-    ingreso histórico entre todos los compradores)."""
+    ingreso histórico entre todos los compradores), ordenados por pérdida esperada."""
     comp = t.dropna(subset=["ingreso_total"]).copy()
     comp["quintil_valor"] = pd.qcut(comp["ingreso_total"].rank(method="first"), 5, labels=["Q1 (menor)", "Q2", "Q3", "Q4", "Q5 (mayor)"])
     riesgo = comp[comp["estado"].isin(["En riesgo"])]
@@ -203,8 +210,12 @@ def segmento_mayor_valor_en_riesgo(t: pd.DataFrame) -> pd.DataFrame:
         ingreso_expuesto_6m=("ingreso_esperado_6m", "sum"),
         margen_expuesto_6m=("margen_esperado_6m", "sum"),
         ingreso_esperado_perdido_6m=("ingreso_esperado_perdido_6m", "sum"),
+        ingreso_perdido_incremental_6m=("ingreso_perdido_incremental_6m", "sum"),
     )
-    return g.reset_index().sort_values("ingreso_expuesto_6m", ascending=False)
+    # Se ordena por la pérdida ESPERADA (ponderada por la probabilidad de no retorno), no por
+    # el ingreso expuesto: el expuesto asume que nadie vuelve y sobrestima el riesgo de
+    # segmentos regulares (Premium/Frecuente), que en el backtest casi siempre regresan.
+    return g.reset_index().sort_values("ingreso_esperado_perdido_6m", ascending=False)
 
 
 def umbrales_inactividad(ventas: pd.DataFrame, t: pd.DataFrame) -> pd.DataFrame:

@@ -1,0 +1,5 @@
+fuga,ingreso_6m,pct_ingreso_semestral,rango_bajo,rango_alto,margen_6m_conservador,margen_6m_optimista,nota
+"Devoluciones en exceso (Ropa_y_Calzado, Electrónica)",136891.76875906446,3.1482059977671986,,,136891.76875906446,27990.042606645064,Ingreso que se conservaría si esas categorías devolvieran como el resto. Margen: conservador = mercancía devuelta se pierde; optimista = se revende al costo.
+Churn (696 clientes 'En riesgo'),39894.80149242487,0.9174916393931625,7048.037231597569,293089.3830369357,9819.800526447289,9819.800526447289,Titular = ingreso esperado x prob. de no retorno. Bajo = solo la parte atribuible a la inactividad prolongada. Alto = escenario donde NADIE vuelve (no realista: ver backtest).
+Quejas sin resolver (CRM),,,,,,,Sin efecto demostrable sobre la frecuencia de compra (IC95 incluye 0). No se cuantifica; ver efecto_minimo_detectable en crm_efecto_ajustado.csv.
+Descuentos sin efecto en volumen (A2),241924.9729775,5.5637359195638325,,,241924.9729775,241924.9729775,"Techo: supone que sin descuento no se pierde volumen (efecto estimado ~0, ver efecto_volumen_efectos_fijos.csv). Validar con un piloto antes de eliminarlos."

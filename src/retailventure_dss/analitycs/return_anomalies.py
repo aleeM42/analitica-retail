@@ -226,7 +226,8 @@ def efecto_quejas(ventas: pd.DataFrame, crm: pd.DataFrame, clientes: pd.DataFram
     parcial/escalada y CONTROL (clientes sin ninguna queja, con fecha índice sorteada de
     la misma distribución de fechas de quejas). El efecto es la diferencia de cambios
     (después - antes) entre grupos, ajustada por segmento (que determina cuánto compra
-    el cliente y por tanto cuánto puede cambiar).
+    el cliente y por tanto cuánto puede cambiar). La referencia del modelo es el CONTROL:
+    cada coeficiente es el cambio en compras de ese grupo menos el del control.
     """
     lo = INICIO_VENTANA + pd.Timedelta(days=ventana)
     hi = FIN_VENTANA - pd.Timedelta(days=ventana)
@@ -256,9 +257,9 @@ def efecto_quejas(ventas: pd.DataFrame, crm: pd.DataFrame, clientes: pd.DataFram
         error_estandar=("delta", lambda s: s.std(ddof=1) / np.sqrt(len(s))),
     ).reset_index()
 
-    # Efecto ajustado por segmento, referencia = queja resuelta
+    # Efecto ajustado por segmento, referencia = control (clientes sin quejas)
     m = smf.ols(
-        "delta ~ C(grupo, Treatment('queja resuelta')) + C(segmento)", data=d
+        "delta ~ C(grupo, Treatment('control (sin quejas)')) + C(segmento)", data=d
     ).fit(cov_type="HC3")
     ci = m.conf_int()
     efectos = []
@@ -266,11 +267,13 @@ def efecto_quejas(ventas: pd.DataFrame, crm: pd.DataFrame, clientes: pd.DataFram
         if nombre.startswith("C(grupo"):
             efectos.append(
                 {
-                    "comparacion_vs_queja_resuelta": nombre.split("T.")[1].rstrip("]"),
+                    "comparacion_vs_control": nombre.split("T.")[1].rstrip("]"),
                     "efecto_en_compras": m.params[nombre],
                     "ic95_inf": ci.loc[nombre, 0],
                     "ic95_sup": ci.loc[nombre, 1],
                     "p_valor": m.pvalues[nombre],
+                    # efecto mínimo detectable (80 % de potencia): 2.8 x error estándar
+                    "efecto_minimo_detectable": 2.8 * (ci.loc[nombre, 1] - ci.loc[nombre, 0]) / 3.92,
                     "ventana_dias": ventana,
                 }
             )

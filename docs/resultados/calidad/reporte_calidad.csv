@@ -1,0 +1,7 @@
+dataset,total_filas,celdas_nulas,duplicados_por_id,filas_con_outliers,outliers_%,completitud_%,unicidad_%,consistencia_%,oportunidad_%,filas_descartadas,filas_marcadas
+clientes,8000,0,0,0,0.0,100.0,100.0,100.0,100.0,0,0
+productos,318,0,0,27,8.49,100.0,100.0,100.0,,0,0
+transacciones,50000,0,0,7084,14.17,100.0,100.0,50.06,100.0,0,24972
+campanas_marketing,8820,0,0,0,0.0,100.0,100.0,48.71,100.0,0,4524
+interacciones_crm,4684,0,0,352,7.51,100.0,100.0,48.16,96.93,0,2500
+devoluciones,6724,0,0,615,9.15,100.0,100.0,100.0,100.0,0,0

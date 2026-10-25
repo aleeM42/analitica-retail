@@ -1,0 +1,5 @@
+segmento,clientes,pct_volvio_real,pct_no_retorno_predicho,pct_no_retorno_real,corte
+Esporádico,36,61.1,95.1,38.9,2024-06-30
+Frecuente,187,89.8,5.4,10.2,2024-06-30
+Inactivo,54,0.0,94.9,100.0,2024-06-30
+Premium,54,98.1,1.5,1.9,2024-06-30

@@ -43,6 +43,7 @@ flowchart TD
             transform_res-->report
             filtered_data-->report
             iqr --> report
+            rules[quality_rules.py: reglas SQL] --> report
 
 
 

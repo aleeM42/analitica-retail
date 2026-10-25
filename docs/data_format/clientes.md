@@ -19,8 +19,8 @@ erDiagram
     }
 ```
 
-| atributo       | formato      |
-| -------------- | ------------ |
-| cliente_id     | `CLI00000`   |
-| genero         | `M\|F`       |
-| fecha_registro | `yyyy-mm-dd` |
+| atributo       | formato                 |
+| -------------- | ----------------------- |
+| cliente_id     | `CLI00000`              |
+| genero         | `M\|F\|No especificado` |
+| fecha_registro | `yyyy-mm-dd`            |
