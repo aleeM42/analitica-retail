@@ -396,7 +396,7 @@ class ChartFactory:
             "+ Retención Predictiva",
             "Margen Post-Plan",
         ]
-        y_values = [2155.16, 95.82, 145.16, 49.20, 0]
+        y_values = [2155.16, 95.82, 145.16, 19.95, 0]
 
         fig.add_trace(
             go.Waterfall(
@@ -416,6 +416,6 @@ class ChartFactory:
 
         return apply_theme(
             fig,
-            title="Intervención estratégica de tres palancas proyecta una recuperación de $580k anuales",
-            subtitle="Recuperación directa equivalente a un +13.5% de incremento en el margen bruto sin aumentar ventas.",
+            title="Intervención estratégica de tres palancas proyecta una recuperación de $521k anuales",
+            subtitle="Recuperación directa equivalente a un +12.1% de incremento en el margen bruto sin aumentar ventas.",
         )

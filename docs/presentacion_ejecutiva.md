@@ -32,7 +32,7 @@
 
 > *¿Es una contracción generalizada del consumo en Venezuela… o un problema de gestión interna que podemos resolver?*
 
-**La respuesta de los datos: es un problema interno.** Identificamos cuatro fuentes de fuga cuantificadas que suman **$580,350 anuales** en margen recuperable. Ninguna requiere más ventas para solucionarse; requieren decisiones quirúrgicas.
+**La respuesta de los datos: es un problema interno.** Identificamos cuatro fuentes de fuga cuantificadas que suman **$521,853 anuales** en margen recuperable. Ninguna requiere más ventas para solucionarse; requieren decisiones quirúrgicas.
 
 ---
 
@@ -51,9 +51,9 @@
 
 - **Dimensión canal:** El canal Online factura el 37.6% de los ingresos pero su margen tras devoluciones es de apenas **9.5%** (vs 13.7% en tienda física), revelando una destrucción de 3.0 pp por logística inversa mal gestionada.
 
-### Fuga #2: La Falsa Salvación de los Descuentos — **$483,850 en 24 meses**
+### Fuga #2: La Falsa Salvación de los Descuentos — **$483,850 en 12 meses**
 
-- El sistema aplicó $483,850 en descuentos sobre 24 meses ($241,925/semestre).
+- El sistema aplicó $967,700 en descuentos totales en los 24 meses del dataset ($483,850/año, $241,925/semestre).
 - **El hallazgo estadístico clave:** Modelo OLS con efectos fijos por `producto_id` (el mismo producto comparado consigo mismo con y sin descuento) entrega un **coeficiente de elasticidad de ~0** (IC 95% incluye cero, p > 0.15).
 - **Conclusión:** Los descuentos no generan volumen incremental. Se subsidia a clientes que habrían comprado de todas formas al precio de lista.
 - El techo del daño recuperable: **$241,925/semestre** si se eliminan los descuentos sin efecto en volumen.
@@ -77,7 +77,7 @@
 
 ---
 
-## 3. DESENLACE: Plan de Rescate Financiero — Tres Palancas, $580,350 Anuales
+## 3. DESENLACE: Plan de Rescate Financiero — Tres Palancas, $521,853 Anuales
 
 ### Recomendación 1: Contención de Devoluciones en Electrónica y Ropa y Calzado
 **Responsable:** Operaciones + Gestión de Proveedores
@@ -107,11 +107,11 @@
 ### Recomendación 3: Reasignación de Marketing hacia Retención Predictiva
 **Responsable:** Marketing + BI + CRM
 
-> **"Si reorientamos el presupuesto de campañas masivas por Email hacia canales push segmentados para los 696 clientes Frecuentes/Premium en riesgo de churn, y pausamos envíos a clientes con quejas CRM activas no resueltas, esperamos un incremento del 45% en la tasa de conversión promedio de las campañas dirigidas, equivalente a $98,400 anuales en ingresos netos incrementales de los clientes de alto valor reactivados."**
+> **"Si reorientamos el presupuesto de campañas masivas por Email hacia canales push segmentados para los 696 clientes Frecuentes/Premium en riesgo de churn, y pausamos envíos a clientes con quejas CRM activas no resueltas, esperamos retener al 50% de los clientes en riesgo, equivalente a $39,895 anuales en ingresos netos preservados de clientes de alto valor."**
 
 **Justificación cuantitativa:**
-- Los 696 clientes en riesgo representan $39,895/semestre en ingresos en peligro.
-- Una retención activa del 50% de ellos mediante campañas de alto impacto preserva ~$49,200/semestre.
+- Los 696 clientes en riesgo representan $39,895/semestre en ingresos en peligro (`ingreso_esperado_perdido_6m`).
+- Una retención activa del 50% de ellos preserva **~$19,947/semestre = $39,895/año** en ingresos directos.
 - La mejora en la tasa de conversión reduce también el costo por conversión, mejorando el ROI neto de margen.
 - Horizonte de implementación: 30 días (configuración de triggers predictivos en el DSS).
 
@@ -123,10 +123,10 @@
 |---|---|---|
 | Contención de devoluciones anómalas | Auditoría proveedores + recomendador de tallas | **+$191,648** en margen |
 | Racionalización de descuentos inelásticos | Eliminar descuentos > 10% sin elasticidad | **+$290,310** en margen |
-| Marketing de retención predictiva | Campañas trigger + pausa a insatisfechos | **+$98,400** en ingresos netos |
-| **TOTAL RECUPERABLE** | | **$580,358 anuales** |
+| Marketing de retención predictiva | Campañas trigger + pausa a insatisfechos | **+$39,895** en ingresos preservados |
+| **TOTAL RECUPERABLE** | | **$521,853 anuales** |
 
-> **Comparación:** El margen bruto total de 24 meses fue $4,310,329. Recuperar $580k anuales = **+13.5% de mejora en el margen bruto semestral actual**, sin necesidad de crecer en ventas.
+> **Comparación:** El margen bruto total de 24 meses fue $4,310,329. Recuperar $521k anuales = **+12.1% de mejora en el margen bruto semestral actual**, sin necesidad de crecer en ventas.
 
 ---
 
@@ -191,14 +191,14 @@
 - **Fuente:** `marketing/roi_campanas.csv`
 - **Decisión gerencial:** Prohibir el reporte de efectividad de marketing basado en venta bruta; adoptar el ROI sobre margen neto como KPI oficial del área.
 
-### V10: "Intervención estratégica de tres palancas recupera $580k anuales sin necesidad de crecer en ventas"
+### V10: "Intervención estratégica de tres palancas recupera $521k anuales sin necesidad de crecer en ventas"
 - **Tipo:** Gráfico Waterfall financiero (cascada)
 - **Secuencia de barras:**
   1. Margen bruto semestral actual: $2,155,164
   2. + Contención devoluciones: +$95,824
   3. + Racionalización descuentos: +$145,155
-  4. + Marketing de retención: +$49,200
-  5. = Margen proyectado post-intervención: **$2,445,343** (+13.5%)
+  4. + Marketing de retención: +$19,947
+  5. = Margen proyectado post-intervención: **$2,416,090** (+12.1%)
 - **Fuente:** `fugas/fugas_impacto_6m.csv` + recomendaciones cuantificadas
 - **Decisión gerencial:** El plan de rescate es autofinanciado: los ahorros de la Palanca 2 (descuentos) financian la implementación de las Palancas 1 y 3.
 
