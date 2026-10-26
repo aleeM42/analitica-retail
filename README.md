@@ -31,6 +31,22 @@
 
 ---
 
+## Ejecución del Sistema
+
+Podés ejecutar todo el pipeline de punta a punta con un solo comando:
+
+```bash
+python main.py
+```
+
+Opciones disponibles:
+- `python main.py` : Flujo completo (ETL -> Modelos Analíticos A2-A4 -> Dashboard Web A5 en `http://127.0.0.1:8050`).
+- `python main.py --dashboard-only` : Abre directamente el dashboard interactivo sin re-procesar datos.
+- `python main.py --no-dashboard` : Ejecuta ETL y todos los modelos estadísticos sin levantar el servidor web.
+- `python main.py --port 8080` : Especifica un puerto personalizado para la interfaz web.
+
+---
+
 ## Requerimientos
 
 ### Funcionales

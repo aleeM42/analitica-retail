@@ -70,7 +70,7 @@ class DashboardDataProvider:
         return {
             "ingreso_total": "$17.39M",
             "margen_bruto": "$4.31M (24.8%)",
-            "fuga_recuperable": "$580,358/año",
+            "fuga_recuperable": "$395,954/año",
             "clientes_en_riesgo": "696 cuentas",
             "devoluciones_exceso": "$547,567",
             "descuentos_inelasticos": "$483,850",
